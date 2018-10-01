@@ -1,11 +1,7 @@
-const {basename} = require('path')
-
 module.exports = (location) => {
-
   const {child, manifest} = require('./run')(location)
-
   return {
-	name: basename(location), // TODO: pass name from config?!
+	// caller has to set name
 	version: 'alpha?',
 	manifest: manifest,
 	init: (sbot, conf) => {
