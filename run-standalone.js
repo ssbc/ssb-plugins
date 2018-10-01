@@ -17,20 +17,8 @@ try {
   process.exit(1)
 }
 
-const manifestP = path.join(__dirname, pluginPath, 'manifest.json')
-let manifest
-try {
-  manifest = require(manifestP)
-} catch (e) {
-  console.error('specified plugin has no manifest.json')
-  console.warn('exception:', e)
-  process.exit(1)
-}
-
-var childCall = require('./run')(pluginPath)
-
-
-var api = require('muxrpc/api')({}, manifest, childCall)
+var {child, manifest} = require('./run')(pluginPath)
+var api = require('muxrpc/api')({}, manifest, child)
 
 api.callback('bob', function (err, value) {
   if (err) throw err

@@ -45,4 +45,7 @@ func (h exampleHandler) HandleCall(ctx context.Context, req *muxrpc.Request, edp
 	}
 }
 
-func (h exampleHandler) HandleConnect(ctx context.Context, e muxrpc.Endpoint) {}
+func (h exampleHandler) HandleConnect(ctx context.Context, e muxrpc.Endpoint) {
+	log.Printf("ex handler running")
+	// use endpoint to check for methods and do setup
+}

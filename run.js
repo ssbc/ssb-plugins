@@ -9,7 +9,7 @@ function run (path, localCall) {
   var stream = MuxRpcStream(
     localCall,
     require('packet-stream-codec'),
-    function () {}
+    function () {} // ???
   )
 
   pull(
@@ -26,19 +26,20 @@ function run (path, localCall) {
   return stream.remoteCall
 }
 
-
-
-// load and the module in the ./example directory.
+// load and run the module
+// must have a manifest.json or this will throw
 module.exports = (pluginPath) => {
-  return run(
-	path.join(pluginPath, 'bin'),
-	// in practice, the localCall method is created
-	// from the local api and manifest
-	function localCall (type, name, args) {
-	  console.log('CALLED', type, name, args)
-	  var cb = args.pop()
-	  cb(null, { okay: true })
-	}
-  )
-
+  const manifest = require(path.join(pluginPath, 'manifest.json'))
+  return {
+	child: run(
+	  path.join(pluginPath, 'bin'),
+	  // in practice, the localCall method is created
+	  // from the local api and manifest
+	  function localCall (type, name, args) {
+		console.log('CALLED', type, name, args)
+		var cb = args.pop()
+		cb(null, { okay: true })
+	  }),
+	manifest: manifest
+  }
 }
