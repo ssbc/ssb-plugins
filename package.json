@@ -12,7 +12,9 @@
     "pull-stream": "^3.6.7",
     "stream-to-pull-stream": "^1.7.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "standard": "^12.0.1"
+  },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
   },

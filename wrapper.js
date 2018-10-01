@@ -8,9 +8,9 @@ module.exports = function (api, manifest) {
     createLocalCall(api, manifest, {}),
     require('packet-stream-codec'),
     function (err) {
-      //if the parent process dies,
-      //stdin/out closes,
-      //just exit.
+      // if the parent process dies,
+      // stdin/out closes,
+      // just exit.
       throw err
     }
   )
@@ -23,5 +23,3 @@ module.exports = function (api, manifest) {
 
   return stream.remoteCall
 }
-
-
