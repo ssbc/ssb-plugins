@@ -3,11 +3,11 @@ const SecretStack = require('secret-stack')
 const test = require('tape')
 const { join } = require('path')
 
+// for the stack
+const ak = require('crypto').randomBytes(32).toString('base64')
+let opt = { appKey: ak }
 
 test('load: secret-stack style', (t) => {
-    // for the stack
-    const ak = require('crypto').randomBytes(32).toString('base64')
-    let opt = {appKey: ak}
 
     // load our plugin
     const plugPath = join(process.cwd(), 'example')
@@ -27,7 +27,29 @@ test('load: secret-stack style', (t) => {
         bot.goodbye((err, val) => {
             t.error(err)
             t.equal(val, 'done')
-            bot.close(()=>{
+            bot.close(() => {
+                t.end()
+            })
+        })
+    })
+})
+
+test('load#2 - trigger callhost', (t) => {
+    const plugPath = join(process.cwd(), 'example')
+    let plug = require('../load')(plugPath)
+
+    let stack = SecretStack(opt).use(plug)
+    let bot = stack(opt)
+
+    bot.callhost((err, ret) => {
+        t.error(err)
+        var addr = bot.getAddress()
+        t.comment('got addr:'+addr)
+        t.deepEqual(ret, addr)
+        bot.goodbye((err, val) => {
+            t.error(err)
+            t.equal(val, 'done')
+            bot.close(() => {
                 t.end()
             })
         })

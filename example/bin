@@ -9,7 +9,7 @@ var { close, remoteCall } = require('../wrapper')({
     console.error('CALLBACK', value, cb)
     remoteCall('async', 'callback', [value], cb)
   },
-  crash: (cb) => {
+  crash: (_) => {
     console.warn('exiting ugly on purpose')
     process.nextTick(() => {
       process.exit(2)
@@ -19,6 +19,12 @@ var { close, remoteCall } = require('../wrapper')({
     cb(null, "done")
     process.nextTick(() => {
       close()
+    })
+  },
+  callhost: (cb) => {
+    remoteCall('sync', 'getAddress', [], (err, addr) => {
+      console.log('got addr', err, addr)
+      cb(err, addr)
     })
   },
 },
