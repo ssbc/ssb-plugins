@@ -17,7 +17,7 @@
     "tape": "^4.9.1"
   },
   "scripts": {
-    "test": "set -e; node ./run-standalone $(pwd)/example; node ./test/standalone.js"
+    "test": "set -e; node ./run-standalone $(pwd)/example; node ./test/standalone.js; node ./test/load.js"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
   "license": "MIT"
