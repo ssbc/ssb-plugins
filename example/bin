@@ -1,17 +1,29 @@
 #! /usr/bin/env node
 
-var rpc = require('../wrapper')({
-  hello: function (name, cb) {
+var { close, remoteCall } = require('../wrapper')({
+  hello: (name, cb) => {
     console.error('HELLLLOOO', name)
     cb(null, 'hello ' + name)
   },
-  callback: function (value, cb) {
+  callback: (value, cb) => {
     console.error('CALLBACK', value, cb)
-    rpc('async', 'callback', [value], cb)
-  }
+    remoteCall('async', 'callback', [value], cb)
+  },
+  crash: (cb) => {
+    console.warn('exiting ugly on purpose')
+    process.nextTick(() => {
+      process.exit(2)
+    })
+  },
+  goodbye: (cb) => {
+    cb(null, "done")
+    process.nextTick(() => {
+      close()
+    })
+  },
 },
-// our manifest is needed, because the
-// calls have a type that must match what we actually
-// understand.
-require('./manifest'))
+  // our manifest is needed, because the
+  // calls have a type that must match what we actually
+  // understand.
+  require('./manifest'))
 

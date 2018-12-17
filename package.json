@@ -13,10 +13,10 @@
     "stream-to-pull-stream": "^1.7.2"
   },
   "devDependencies": {
-    "standard": "^12.0.1"
+    "tape": "^4.9.1"
   },
   "scripts": {
-    "test": "set -e; node ./run-standalone $(pwd)/example"
+    "test": "set -e; node ./run-standalone $(pwd)/example; node ./test/standalone.js"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
   "license": "MIT"

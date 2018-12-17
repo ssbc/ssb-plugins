@@ -4,12 +4,14 @@ var toPull = require('stream-to-pull-stream')
 var pull = require('pull-stream')
 var path = require('path')
 
-function run (path, localCall) {
+function run(path, localCall) {
   var proc = cp.spawn(path, [], {})
   var stream = MuxRpcStream(
     localCall,
     require('packet-stream-codec'),
-    function () {} // ???
+    function onClose() {
+
+    }
   )
 
   pull(
@@ -23,23 +25,29 @@ function run (path, localCall) {
     toPull.sink(process.stderr)
   )
 
-  return stream.remoteCall
+  return {
+    sream: stream.remoteCall,
+    proc: proc,
+  }
 }
 
 // load and run the module
 // must have a manifest.json or this will throw
 module.exports = (pluginPath) => {
   const manifest = require(path.join(pluginPath, 'manifest.json'))
+  const { proc, sream } = run(
+    path.join(pluginPath, 'bin'),
+    // in practice, the localCall method is created
+    // from the local api and manifest
+    function localCall(type, name, args) {
+      console.log('CALLED', type, name, args)
+      var cb = args.pop()
+      cb(null, { okay: true })
+    }
+  )
   return {
-	child: run(
-	  path.join(pluginPath, 'bin'),
-	  // in practice, the localCall method is created
-	  // from the local api and manifest
-	  function localCall (type, name, args) {
-		console.log('CALLED', type, name, args)
-		var cb = args.pop()
-		cb(null, { okay: true })
-	  }),
-	manifest: manifest
+    proc: proc,
+    child: sream,
+    manifest: manifest
   }
 }

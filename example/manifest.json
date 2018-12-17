@@ -1,4 +1,6 @@
 {
   "hello": "async",
-  "callback": "async"
+  "callback": "async",
+  "crash": "async",
+  "goodbye": "async"
 }

@@ -7,11 +7,12 @@ module.exports = function (api, manifest) {
   var stream = MuxRpcStream(
     createLocalCall(api, manifest, {}),
     require('packet-stream-codec'),
-    function (err) {
-      // if the parent process dies,
-      // stdin/out closes,
-      // just exit.
-      throw err
+    function onClose(err) {
+      if (err) {
+        throw err
+      } else {
+        console.warn('muxrpc plugin wrapper closed')
+      }
     }
   )
 
@@ -21,5 +22,5 @@ module.exports = function (api, manifest) {
     toPull.sink(process.stdout)
   )
 
-  return stream.remoteCall
+  return stream
 }
