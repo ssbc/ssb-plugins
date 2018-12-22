@@ -11,6 +11,7 @@ function run(path, localCall) {
     require('packet-stream-codec'),
     function onClose() {
       // ??
+      proc.kill(9)
     }
   )
 
@@ -26,6 +27,7 @@ function run(path, localCall) {
   )
 
   return {
+    //sream... you mean stream?
     sream: stream.remoteCall,
     proc: proc,
   }
@@ -33,21 +35,16 @@ function run(path, localCall) {
 
 // load and run the module
 // must have a manifest.json or this will throw
-module.exports = (pluginPath) => {
-  const manifest = require(path.join(pluginPath, 'manifest.json'))
+module.exports = (pluginPath, localCall) => {
   const { proc, sream } = run(
     path.join(pluginPath, 'bin'),
-    // in practice, the localCall method is created
-    // from the local api and manifest
-    function localCall(type, name, args) {
-      console.log('CALLED', type, name, args)
-      var cb = args.pop()
-      cb(null, { okay: true })
-    }
+    localCall
   )
   return {
     proc: proc,
     child: sream,
-    manifest: manifest
+    //needed by test/standalone otherwise remove this
+    manifest: require(path.join(pluginPath, 'manifest.json'))
   }
 }
+
