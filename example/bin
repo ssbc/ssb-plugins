@@ -22,8 +22,8 @@ var { close, remoteCall } = require('../wrapper')({
     })
   },
   callhost: (cb) => {
-    remoteCall('sync', 'getAddress', [], (err, addr) => {
-      console.log('got addr', err, addr)
+    remoteCall('sync', 'address', ['device'], (err, addr) => {
+      console.error('got addr', err, addr)
       cb(err, addr)
     })
   },
