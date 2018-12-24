@@ -37,7 +37,6 @@ test('load: secret-stack style', (t) => {
 test('load#2 - trigger callhost', (t) => {
     const plugPath = join(process.cwd(), 'example')
     let plug = require('../load')(plugPath)
-    console.log(plug)
     let stack = SecretStack(opt).use(plug)
     let bot = stack(opt)
 
@@ -64,9 +63,8 @@ test('load, with name: secret-stack style', (t) => {
 
     // load our plugin
     const plugPath = join(process.cwd(), 'example')
-    let plug = require('../load')(plugPath)
-    plug.name = 'example'
-    console.error("PLUG", plug)
+    let plug = require('../load')(plugPath, 'example')
+    t.equal(plug.name, 'example')
     // hand it to the stack and init
     let stack = SecretStack(opt).use(plug)
     let bot = stack(opt)
@@ -88,6 +86,9 @@ test('load, with name: secret-stack style', (t) => {
         })
     })
 })
+
+
+
 
 
 
