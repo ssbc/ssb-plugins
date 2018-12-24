@@ -1,4 +1,6 @@
 var path = require('path')
+var MuxrpcApi = require('muxrpc/api')
+var Run = require('./run')
 module.exports = (location, name) => {
   const manifest = require(path.join(location, 'manifest.json'))
   return {
@@ -7,11 +9,7 @@ module.exports = (location, name) => {
   manifest: manifest,
   init: (server, conf) => {
       const localCall = require('muxrpc/local-api')(server, server.getManifest())
-      //prefer not to start child process intil plugin is initialized
-      //otherwise this would fail when testing multiple sbot instances.
-      const {child} = require('./run')(location, localCall)
-      // TODO: how do I pass server to it without creating a loop?
-      return require('muxrpc/api')({}, manifest, child)
+      return MuxrpcApi({}, manifest, Run(location, localCall).remoteCall)
     }
   }
 }

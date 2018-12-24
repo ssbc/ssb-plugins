@@ -7,11 +7,14 @@ function fakeLocalCall(type, name, args) {
   cb(null, { okay: true })
 }
 
-test('standalone: kill from host', (t) => {
-    const plugPath = join(process.cwd(), 'example')
 
-    var { proc, child, manifest } = require('../run')(plugPath, fakeLocalCall)
-    var api = require('muxrpc/api')({}, manifest, child)
+var manifest = require('../example/manifest.json')
+const plugPath = join(__dirname, '..', 'example', 'bin')
+
+test('standalone: kill from host', (t) => {
+
+    var { proc, remoteCall } = require('../run')(plugPath, fakeLocalCall)
+    var api = require('muxrpc/api')({}, manifest, remoteCall)
 
     api.callback('bob', (err, value) => {
         t.error(err, 'callback err')
@@ -26,10 +29,9 @@ test('standalone: kill from host', (t) => {
 })
 
 test('standalone: let child crash', (t) => {
-    const plugPath = join(process.cwd(), 'example')
 
-    var { child, manifest } = require('../run')(plugPath, fakeLocalCall)
-    var api = require('muxrpc/api')({}, manifest, child)
+    var { remoteCall } = require('../run')(plugPath, fakeLocalCall)
+    var api = require('muxrpc/api')({}, manifest, remoteCall)
 
     api.callback('bob', (err, value) => {
         t.error(err, 'callback err')
@@ -43,10 +45,9 @@ test('standalone: let child crash', (t) => {
 })
 
 test('standalone: goodbye', (t) => {
-    const plugPath = join(process.cwd(), 'example')
 
-    var { child, manifest } = require('../run')(plugPath, fakeLocalCall)
-    var api = require('muxrpc/api')({}, manifest, child)
+    var { remoteCall } = require('../run')(plugPath, fakeLocalCall)
+    var api = require('muxrpc/api')({}, manifest, remoteCall)
 
     api.callback('bob', (err, value) => {
         t.error(err, 'callback err')

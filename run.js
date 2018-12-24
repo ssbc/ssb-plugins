@@ -4,7 +4,7 @@ var toPull = require('stream-to-pull-stream')
 var pull = require('pull-stream')
 var path = require('path')
 
-function run(path, localCall) {
+module.exports = function run(path, localCall) {
   var proc = cp.spawn(path, [], {})
   var stream = MuxRpcStream(
     localCall,
@@ -27,24 +27,10 @@ function run(path, localCall) {
   )
 
   return {
-    //sream... you mean stream?
-    sream: stream.remoteCall,
+    remoteCall: stream.remoteCall,
     proc: proc,
   }
 }
 
-// load and run the module
-// must have a manifest.json or this will throw
-module.exports = (pluginPath, localCall) => {
-  const { proc, sream } = run(
-    path.join(pluginPath, 'bin'),
-    localCall
-  )
-  return {
-    proc: proc,
-    child: sream,
-    //needed by test/standalone otherwise remove this
-    manifest: require(path.join(pluginPath, 'manifest.json'))
-  }
-}
+
 
