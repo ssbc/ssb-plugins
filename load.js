@@ -5,7 +5,7 @@ module.exports = (location, name) => {
   const manifest = require(path.join(location, 'manifest.json'))
   return {
   name: name,
-  version: 'alpha?',
+  version: require(path.join(location, 'package.json')).version,
   manifest: manifest,
   init: (server, conf) => {
       const localCall = require('muxrpc/local-api')(server, server.getManifest())

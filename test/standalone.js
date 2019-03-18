@@ -9,7 +9,7 @@ function fakeLocalCall(type, name, args) {
 
 
 var manifest = require('../example/manifest.json')
-const plugPath = join(__dirname, '..', 'example', 'bin')
+const plugPath = join(__dirname, '..', 'example')
 
 test('standalone: kill from host', (t) => {
 

@@ -4,8 +4,9 @@ var toPull = require('stream-to-pull-stream')
 var pull = require('pull-stream')
 var path = require('path')
 
-module.exports = function run(path, localCall) {
-  var proc = cp.spawn(path, [], {})
+module.exports = function run(location, localCall) {
+  console.error(location)
+  var proc = cp.spawn(path.join(location, 'bin'), [], {})
   var stream = MuxRpcStream(
     localCall,
     require('packet-stream-codec'),

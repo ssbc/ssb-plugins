@@ -8,16 +8,29 @@
     "url": "git://github.com/dominictarr/ssb-plugins2.git"
   },
   "dependencies": {
+    "cross-spawn": "^6.0.5",
+    "explain-error": "^1.0.4",
+    "mdmanifest": "^1.0.8",
+    "mkdirp": "^0.5.1",
     "muxrpc": "^6.4.0",
-    "pull-stream": "^3.6.7",
+    "muxrpc-validation": "^3.0.0",
+    "mv": "^2.1.1",
+    "nimraf": "^1.1.0",
+    "osenv": "^0.1.5",
+    "pull-cat": "^1.1.11",
+    "pull-many": "^1.0.8",
+    "pull-pushable": "^2.2.0",
+    "pull-stream": "^3.6.9",
     "stream-to-pull-stream": "^1.7.2"
   },
   "devDependencies": {
-    "secret-stack": "^5.0.0",
-    "tape": "^4.9.1"
+    "secret-stack": "^6.0.3",
+    "ssb-db": "^19.1.0",
+    "ssb-keys": "^7.1.5",
+    "tape": "^4.10.1"
   },
   "scripts": {
-    "test": "set -e; node ./run-standalone $(pwd)/example; node ./test/standalone.js; node ./test/load.js"
+    "test": "tape ./test/*.js"
   },
   "author": "Dominic Tarr <dominic.tarr@gmail.com> (http://dominictarr.com)",
   "license": "MIT"

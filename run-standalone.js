@@ -22,10 +22,10 @@ var api = require('muxrpc/api')({}, manifest, child)
 
 api.callback('bob', function (err, value) {
   if (err) throw err
-  console.log('from cb', value)
+  console.error('from cb', value)
   api.hello('DARRYL', function (err, value) {
     if (err) throw err
-    console.log('from hello', value)
+    console.error('from hello', value)
     process.exit()
   })
 })
