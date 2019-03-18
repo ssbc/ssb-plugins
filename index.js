@@ -192,7 +192,14 @@ module.exports.loadUserPlugins = function (createSsbServer, config) {
 
     if (createSsbServer.plugins.some(plug => plug.name === name))
       throw new Error('already loaded plugin named:'+name)
-      var plugin = require(path.join(nodeModulesPath, module_name))
+      var pkg = require(path.join(nodeModulesPath, module_name, 'package.json'))
+      var plugin
+      if(pkg.ssb && pkg.ssb.outOfProcess) {
+        plugin = load(path.join(nodeModulesPath, module_name), name)
+      } else {
+        plugin = require(path.join(nodeModulesPath, module_name))
+      }
+
       if(!plugin || plugin.name !== name)
         throw new Error('plugin at:'+module_name+' expected name:'+name+' but had:'+(plugin||{}).name)
       assertSsbServerPlugin(plugin)
@@ -224,4 +231,5 @@ function validatePluginName (name) {
     return false
   return true
 }
+
 
