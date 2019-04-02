@@ -1,4 +1,4 @@
-# ssb-plugins2
+# ssb-plugins
 
 proof of concept muxrpc plugins as separate process
 
