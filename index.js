@@ -19,6 +19,10 @@ function isObject(o) {
   return o && 'object' === typeof o
 }
 
+function isString(s) {
+  return 'string' === typeof s
+}
+
 module.exports = {
   name: 'plugins',
   version: '1.0.0',
@@ -29,7 +33,6 @@ module.exports = {
     disable: 'async',
     help: 'sync'
   },
-//mdm.manifest(fs.readFileSync(path.join(__dirname, 'api.md'), 'utf8')),
   permissions: {
     master: {allow: ['install', 'uninstall', 'enable', 'disable']}
   },
@@ -45,7 +48,7 @@ module.exports = {
         checkInstalled(pluginName, function (err) {
           if (err) return cb(err)
 
-          config.plugins[pluginName] = b 
+          config.plugins[pluginName] = b
           writePluginConfig(pluginName, b)
           if (b)
             cb(null, '\''+pluginName+'\' has been enabled. Restart ssb-server to use the plugin.')
@@ -98,8 +101,17 @@ module.exports = {
     }
 
     return {
-      install: valid.source(function (pluginName, opts) {
-        if(isObject(pluginName)) pluginName = pluginName.module
+      install: valid.source(function (opts, _opts) {
+        var pluginName
+        if(isString(opts)) {
+          pluginName = opts
+          opts = _opts
+          opts.module = pluginName
+        }
+        else {
+          pluginName = opts.module
+        }
+
         var p = pushable()
         var dryRun = opts && opts['dry-run']
         var from   = opts && opts.from
@@ -170,8 +182,16 @@ module.exports = {
           p
         ])
       }, 'string', 'object?'),
-      uninstall: valid.source(function (pluginName, opts) {
-        if(isObject(pluginName)) pluginName = pluginName.module
+      uninstall: valid.source(function (opts, _opts) {
+        var pluginName
+        if(isString(opts)) {
+          pluginName = opts
+          opts = _opts
+        }
+        else {
+          pluginName = opts.module
+        }
+
         var p = pushable()
         if (!pluginName || typeof pluginName !== 'string')
           return pull.error(new Error('plugin name is required'))
@@ -202,15 +222,20 @@ module.exports.loadUserPlugins = function (createSsbServer, config) {
   //enabled in the config
   for(var module_name in config.plugins) {
     if(config.plugins[module_name]) {
-    var name = config.plugins[module_name]
-    if(name === true)
+    var name = config.plugins[module_name], outOfProcess
+    if(name === true) {
       name = /^ssb-/.test(module_name) ? module_name.substring(4) : module_name
-
+    }
+    else if(isObject(name)) {
+      outOfProcess = name.process
+      name = name.name || module_name
+      name = /^ssb-/.test(module_name) ? module_name.substring(4) : module_name
+    }
     if (createSsbServer.plugins.some(plug => plug.name === name))
       throw new Error('already loaded plugin named:'+name)
       var pkg = require(path.join(nodeModulesPath, module_name, 'package.json'))
       var plugin
-      if(pkg.ssb && pkg.ssb.outOfProcess) {
+      if(outOfProcess) {
         plugin = load(path.join(nodeModulesPath, module_name), name)
       } else {
         plugin = require(path.join(nodeModulesPath, module_name))
@@ -247,6 +272,4 @@ function validatePluginName (name) {
     return false
   return true
 }
-
-
 
