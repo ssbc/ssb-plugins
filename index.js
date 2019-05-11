@@ -18,7 +18,14 @@ var valid = require('muxrpc-validation')({})
 module.exports = {
   name: 'plugins',
   version: '1.0.0',
-  manifest: mdm.manifest(fs.readFileSync(path.join(__dirname, 'api.md'), 'utf8')),
+  manifest: {
+    install: 'source',
+    uninstall: 'source',
+    enable: 'async',
+    disable: 'async',
+    help: 'sync'
+  }
+//mdm.manifest(fs.readFileSync(path.join(__dirname, 'api.md'), 'utf8')),
   permissions: {
     master: {allow: ['install', 'uninstall', 'enable', 'disable']}
   },
@@ -174,7 +181,8 @@ module.exports = {
         return p
       }, 'string', 'object?'),
       enable: valid.async(configPluginEnabled(true), 'string'),
-      disable: valid.async(configPluginEnabled(false), 'string')
+      disable: valid.async(configPluginEnabled(false), 'string'),
+      help: function () { return require('./help') }
     }
   }
 }
@@ -231,5 +239,4 @@ function validatePluginName (name) {
     return false
   return true
 }
-
 
