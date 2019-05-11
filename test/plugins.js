@@ -15,16 +15,27 @@ function resetSsbServer () {
   createSsbServer.use(require('..'))
 }
 
-function testTestPlugin(t, ssbServer) {
-  t.ok(ssbServer.test)
-  t.ok(ssbServer.test.ping)
-
+function testTestPlugin(t, ssbServer, subProcess) {
+  console.log(ssbServer)
+  t.ok(ssbServer.test, 'has test')
+  t.ok(ssbServer.test.ping, 'has test.ping')
+  t.ok(ssbServer.test.pid, 'has test.pid')
   ssbServer.test.ping('ping', function (err, res) {
     if (err) throw err
     t.equal(res, 'ping pong')
 
-    ssbServer.close(function () {
-      t.end()
+    ssbServer.test.pid(function (err, pid) {
+      if(err) throw err
+      if(!subProcess)
+        t.equal(pid, process.pid)
+      else
+        t.notEqual(pid, process.pid)
+
+      console.error('CLOSING')
+      ssbServer.close(true, function () {
+        console.error('CLOSED')
+        t.end()
+      })
     })
   })
 }
@@ -141,7 +152,7 @@ tape('install and load plugins', function (t) {
 
         t.ok(fs.statSync(path.join(datadirPath, 'node_modules/my-test-plugin')))
 
-        ssbServer.close(function () {
+        ssbServer.close(true, function () {
           t.end()
         })
       })
@@ -184,6 +195,28 @@ tape('install and load plugins', function (t) {
   })
 
 
+  t.test('load-user-plugins, subprocess', function (t) {
+
+    var config = {
+      path: datadirPath,
+      port: 45451, host: 'localhost',
+      keys: aliceKeys,
+      plugins: {
+        'my-test-plugin': {
+          name: 'test',
+          process: true
+        }
+      }
+    }
+
+    resetSsbServer()
+    createSsbServer
+      .use(require('../load-user-plugins')(config))
+
+    var ssbServer = createSsbServer(config)
+    testTestPlugin(t, ssbServer, true)
+  })
+
 
   t.test('uninstall plugin under custom name', function (t) {
 
@@ -210,6 +243,5 @@ tape('install and load plugins', function (t) {
     )
   })
 })
-
 
 
