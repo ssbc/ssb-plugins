@@ -15,6 +15,10 @@ var mdm = require('mdmanifest')
 var explain = require('explain-error')
 var valid = require('muxrpc-validation')({})
 
+function isObject(o) {
+  return o && 'object' === typeof o
+}
+
 module.exports = {
   name: 'plugins',
   version: '1.0.0',
@@ -37,6 +41,7 @@ module.exports = {
     // helper to enable/disable plugins
     function configPluginEnabled (b) {
       return function (pluginName, cb) {
+        if(isObject(pluginName)) pluginName = pluginName.module
         checkInstalled(pluginName, function (err) {
           if (err) return cb(err)
 
@@ -65,6 +70,7 @@ module.exports = {
 
     // write the plugin config to ~/.ssb/config
     function writePluginConfig (pluginName, value) {
+
       var cfgPath = path.join(config.path, 'config')
       // load ~/.ssb/config
       let existingConfig
@@ -93,6 +99,7 @@ module.exports = {
 
     return {
       install: valid.source(function (pluginName, opts) {
+        if(isObject(pluginName)) pluginName = pluginName.module
         var p = pushable()
         var dryRun = opts && opts['dry-run']
         var from   = opts && opts.from
@@ -164,6 +171,7 @@ module.exports = {
         ])
       }, 'string', 'object?'),
       uninstall: valid.source(function (pluginName, opts) {
+        if(isObject(pluginName)) pluginName = pluginName.module
         var p = pushable()
         if (!pluginName || typeof pluginName !== 'string')
           return pull.error(new Error('plugin name is required'))
@@ -239,4 +247,6 @@ function validatePluginName (name) {
     return false
   return true
 }
+
+
 
