@@ -72,7 +72,7 @@ module.exports = {
     }
 
     // write the plugin config to ~/.ssb/config
-    function writePluginConfig (pluginName, value) {
+    function writePluginConfig (config) {
 
       var cfgPath = path.join(config.path, 'config')
       // load ~/.ssb/config
@@ -91,8 +91,7 @@ module.exports = {
 
 
         // update the plugins config
-        existingConfig.plugins = existingConfig.plugins || {}
-        existingConfig.plugins[pluginName] = value
+        existingConfig.plugins = config.plugins
 
         // write to disc
         fs.writeFileSync(cfgPath, JSON.stringify(existingConfig, null, 2), 'utf-8')
@@ -101,7 +100,7 @@ module.exports = {
     }
 
     return {
-      install: valid.source(function (opts, _opts) {
+      install: function (opts, _opts) {
         var pluginName
         if(isString(opts)) {
           pluginName = opts
@@ -167,8 +166,12 @@ module.exports = {
                   // enable the plugin
                   // - use basename(), because plugins can be installed from the FS, in which case pluginName is a path
                   var name = path.basename(pluginName)
-                  config.plugins[name] = true
-                  writePluginConfig(name, true)
+                  config.plugins[name] = {
+                    name: name,
+                    enabled: true,
+                    process: opts.process
+                  }
+                  writePluginConfig(config)
                   p.push(Buffer.from('"'+pluginName+'" has been installed. Restart ssb-server to enable the plugin.\n', 'utf-8'))
                   p.end()
                 }
@@ -181,8 +184,8 @@ module.exports = {
           many([toPull(child.stdout), toPull(child.stderr)]),
           p
         ])
-      }, 'string', 'object?'),
-      uninstall: valid.source(function (opts, _opts) {
+      },
+      uninstall: function (opts, _opts) {
         var pluginName
         if(isString(opts)) {
           pluginName = opts
@@ -200,14 +203,15 @@ module.exports = {
 
         rimraf(modulePath, function (err) {
           if (!err) {
-            writePluginConfig(pluginName, false)
+            delete config.plugins[pluginName]
+            writePluginConfig(config)
             p.push(Buffer.from('"'+pluginName+'" has been uninstalled. Restart ssb-server to disable the plugin.\n', 'utf-8'))
             p.end()
           } else
             p.end(err)
         })
         return p
-      }, 'string', 'object?'),
+      },
       enable: valid.async(configPluginEnabled(true), 'string'),
       disable: valid.async(configPluginEnabled(false), 'string'),
       help: function () { return require('./help') }
@@ -272,4 +276,5 @@ function validatePluginName (name) {
     return false
   return true
 }
+
 
