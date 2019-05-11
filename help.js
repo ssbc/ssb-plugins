@@ -1,8 +1,8 @@
 
 var Module = {
-  single: 'module',
+  single: 'name',
   args: {
-    module: {
+    name: {
       type: 'string',
       description: 'a module@version-range string'
     }

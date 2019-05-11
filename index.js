@@ -44,7 +44,7 @@ module.exports = {
     // helper to enable/disable plugins
     function configPluginEnabled (b) {
       return function (pluginName, cb) {
-        if(isObject(pluginName)) pluginName = pluginName.module
+        if(isObject(pluginName)) pluginName = pluginName.name
         checkInstalled(pluginName, function (err) {
           if (err) return cb(err)
 
@@ -108,7 +108,7 @@ module.exports = {
           opts.module = pluginName
         }
         else {
-          pluginName = opts.module
+          pluginName = opts.name
         }
 
         var p = pushable()
@@ -192,7 +192,7 @@ module.exports = {
           opts = _opts
         }
         else {
-          pluginName = opts.module
+          pluginName = opts.name
         }
 
         var p = pushable()
