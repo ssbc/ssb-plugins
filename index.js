@@ -43,17 +43,26 @@ module.exports = {
 
     // helper to enable/disable plugins
     function configPluginEnabled (b) {
-      return function (pluginName, cb) {
-        if(isObject(pluginName)) pluginName = pluginName.name
+      return function (opts, cb) {
+        var pluginName
+        if(isString(opts)) {
+          pluginName = opts
+          opts = {}
+        }
+
         checkInstalled(pluginName, function (err) {
           if (err) return cb(err)
 
-          config.plugins[pluginName] = b
-          writePluginConfig(pluginName, b)
-          if (b)
-            cb(null, '\''+pluginName+'\' has been enabled. Restart ssb-server to use the plugin.')
+          if(isObject(config.plugins[pluginName])) {
+            if(b) delete config.plugins[pluginName].enabled
+            else config.plugins[pluginName].enabled = false
+          }
           else
-            cb(null, '\''+pluginName+'\' has been disabled. Restart ssb-server to stop using the plugin.')
+            config.plugins[pluginName] = b
+
+          writePluginConfig(pluginName, b)
+          if (b) cb(null, '\''+pluginName+'\' has been enabled. Restart ssb-server to use the plugin.')
+          else   cb(null, '\''+pluginName+'\' has been disabled. Restart ssb-server to stop using the plugin.')
         })
       }
     }
@@ -168,7 +177,6 @@ module.exports = {
                   var name = path.basename(pluginName)
                   config.plugins[name] = {
                     name: name,
-                    enabled: true,
                     process: opts.process
                   }
                   writePluginConfig(config)
