@@ -15,6 +15,21 @@ function resetSsbServer () {
   createSsbServer.use(require('..'))
 }
 
+function testTestPlugin(t, ssbServer) {
+  t.ok(ssbServer.test)
+  t.ok(ssbServer.test.ping)
+
+  ssbServer.test.ping('ping', function (err, res) {
+    if (err) throw err
+    t.equal(res, 'ping pong')
+
+    ssbServer.close(function () {
+      t.end()
+    })
+  })
+}
+
+
 tape('install and load plugins', function (t) {
 
   var aliceKeys = ssbKeys.generate()
@@ -59,17 +74,7 @@ tape('install and load plugins', function (t) {
     require('..').loadUserPlugins(createSsbServer, config)
     var ssbServer = createSsbServer(config)
 
-    t.ok(ssbServer.test)
-    t.ok(ssbServer.test.ping)
-
-    ssbServer.test.ping('ping', function (err, res) {
-      if (err) throw err
-      t.equal(res, 'ping pong')
-
-      ssbServer.close(function () {
-        t.end()
-      })
-    })
+    testTestPlugin(t, ssbServer)
   })
 
   t.test('installed and disabled plugin is not loaded', function (t) {
@@ -157,18 +162,28 @@ tape('install and load plugins', function (t) {
     require('..').loadUserPlugins(createSsbServer, config)
     var ssbServer = createSsbServer(config)
 
-    t.ok(ssbServer.test)
-    t.ok(ssbServer.test.ping)
-
-    ssbServer.test.ping('ping', function (err, res) {
-      if (err) throw err
-      t.equal(res, 'ping pong')
-
-      ssbServer.close(function () {
-        t.end()
-      })
-    })
+    testTestPlugin(t, ssbServer)
   })
+
+  t.test('load-user-plugins', function (t) {
+
+    var config = {
+      path: datadirPath,
+      port: 45451, host: 'localhost',
+      keys: aliceKeys,
+      plugins: {
+        'my-test-plugin': 'test'
+      }
+    }
+    resetSsbServer()
+    createSsbServer
+      .use(require('../load-user-plugins')(config))
+
+    var ssbServer = createSsbServer(config)
+    testTestPlugin(t, ssbServer)
+  })
+
+
 
   t.test('uninstall plugin under custom name', function (t) {
 
@@ -195,3 +210,6 @@ tape('install and load plugins', function (t) {
     )
   })
 })
+
+
+
