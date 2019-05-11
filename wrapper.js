@@ -8,11 +8,6 @@ module.exports = function (api, manifest) {
     createLocalCall(api, manifest, {}),
     require('packet-stream-codec'),
     function onClose(err) {
-      if (err) {
-        throw err
-      } else {
-        console.warn('muxrpc plugin wrapper closed')
-      }
     }
   )
 
@@ -24,3 +19,8 @@ module.exports = function (api, manifest) {
 
   return stream
 }
+
+
+
+
+

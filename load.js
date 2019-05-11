@@ -9,7 +9,14 @@ module.exports = (location, name) => {
   manifest: manifest,
   init: (server, conf) => {
       const localCall = require('muxrpc/local-api')(server, server.getManifest())
-      return MuxrpcApi({}, manifest, Run(location, localCall).remoteCall)
+      var run = Run(location, localCall)
+      server.close.hook(function (fn, args) {
+        var self = this
+        run.kill(function () {
+          fn.apply(self, args)
+        })
+      })
+      return MuxrpcApi({}, manifest, run.remoteCall)
     }
   }
 }

@@ -1,5 +1,6 @@
 var path = require('path')
 var assert = require('assert')
+var load = require('./load')
 
 function isObject(o) {
   return o && 'object' === typeof o
@@ -29,21 +30,21 @@ module.exports = function (config) {
   var a = []
   for(var module_name in config.plugins) {
     if(config.plugins[module_name]) {
-    var name = config.plugins[module_name], outOfProcess
+    var name = config.plugins[module_name]
+    var subprocess
     if(name === true) {
       name = /^ssb-/.test(module_name) ? module_name.substring(4) : module_name
     }
     else if(isObject(name)) {
-      outOfProcess = name.process
-      name = name.name || module_name
-      name = /^ssb-/.test(module_name) ? module_name.substring(4) : module_name
+      subprocess = name.process //change to subprocess?
+      name = name.name || (/^ssb-/.test(module_name) ? module_name.substring(4) : module_name)
     }
 //    if (createSsbServer.plugins.some(plug => plug.name === name))
 //      throw new Error('already loaded plugin named:'+name)
 
-      var pkg = require(path.join(nodeModulesPath, module_name, 'package.json'))
+//      var pkg = require(path.join(nodeModulesPath, module_name, 'package.json'))
       var plugin
-      if(outOfProcess) {
+      if(subprocess) {
         plugin = load(path.join(nodeModulesPath, module_name), name)
       } else {
         plugin = require(path.join(nodeModulesPath, module_name))
@@ -58,7 +59,3 @@ module.exports = function (config) {
   }
   return a
 }
-
-
-
-

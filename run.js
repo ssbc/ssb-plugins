@@ -5,15 +5,10 @@ var pull = require('pull-stream')
 var path = require('path')
 
 module.exports = function run(location, localCall) {
-  console.error(location)
   var proc = cp.spawn(path.join(location, 'bin'), [], {})
   var stream = MuxRpcStream(
     localCall,
-    require('packet-stream-codec'),
-    function onClose() {
-      // ??
-      proc.kill(9)
-    }
+    require('packet-stream-codec')
   )
 
   pull(
@@ -28,10 +23,22 @@ module.exports = function run(location, localCall) {
   )
 
   return {
+    kill: function (cb) {
+      proc.once('exit', function () { cb() })
+      proc.kill(9)
+    },
     remoteCall: stream.remoteCall,
     proc: proc,
   }
 }
+
+
+
+
+
+
+
+
 
 
 
