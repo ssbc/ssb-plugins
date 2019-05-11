@@ -177,7 +177,7 @@ module.exports = {
                   var name = path.basename(pluginName)
                   config.plugins[name] = {
                     name: name,
-                    process: opts.process
+                    subprocess: opts.subprocess
                   }
                   writePluginConfig(config)
                   p.push(Buffer.from('"'+pluginName+'" has been installed. Restart ssb-server to enable the plugin.\n', 'utf-8'))

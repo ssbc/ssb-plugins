@@ -204,7 +204,7 @@ tape('install and load plugins', function (t) {
       plugins: {
         'my-test-plugin': {
           name: 'test',
-          process: true
+          subprocess: true
         }
       }
     }
@@ -243,5 +243,4 @@ tape('install and load plugins', function (t) {
     )
   })
 })
-
 

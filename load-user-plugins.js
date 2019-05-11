@@ -36,7 +36,7 @@ module.exports = function (config) {
       name = /^ssb-/.test(module_name) ? module_name.substring(4) : module_name
     }
     else if(isObject(name)) {
-      subprocess = name.process //change to subprocess?
+      subprocess = name.subprocess
       name = name.name || (/^ssb-/.test(module_name) ? module_name.substring(4) : module_name)
     }
 //    if (createSsbServer.plugins.some(plug => plug.name === name))
