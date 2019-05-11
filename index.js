@@ -28,7 +28,7 @@ module.exports = {
     enable: 'async',
     disable: 'async',
     help: 'sync'
-  }
+  },
 //mdm.manifest(fs.readFileSync(path.join(__dirname, 'api.md'), 'utf8')),
   permissions: {
     master: {allow: ['install', 'uninstall', 'enable', 'disable']}
