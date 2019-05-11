@@ -1,17 +1,20 @@
 module.exports = {
   name: 'test',
   version: '1.0.0',
-  manifest: {
-    ping: 'async'
-  },
+  manifest: require('./manifest.json'),
   permissions: {
-    master: {allow: ['ping']}
+    master: {allow: ['ping', 'pid']}
   },
-  init: function (server, config) {
+  init: function () {
     return {
       ping: function (str, cb) {
         return cb(null, str + ' pong')
+      },
+      pid: function (cb) {
+        cb(null, process.pid)
       }
     }
   }
 }
+
+
