@@ -25,7 +25,7 @@ module.exports = function run(location, localCall) {
   return {
     kill: function (cb) {
       proc.once('exit', function () { cb() })
-      proc.kill(9)
+      proc.kill('SIGKILL')
     },
     remoteCall: stream.remoteCall,
     proc: proc,
