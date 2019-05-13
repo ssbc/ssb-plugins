@@ -1,7 +1,7 @@
 {
   "name": "ssb-plugins",
   "description": "",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "homepage": "https://github.com/dominictarr/ssb-plugins2",
   "repository": {
     "type": "git",
