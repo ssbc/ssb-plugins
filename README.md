@@ -2,7 +2,7 @@
 
 proof of concept muxrpc plugins as separate process
 
-[see secret-stack/PLUGINS.md for how to create a plugin](https://github.com/ssbc/plugins/blob/master/PLUGINS.md)
+[see `secret-stack/PLUGINS.md` for how to create a plugin](https://github.com/ssbc/secret-stack/blob/master/PLUGINS.md)
 
 # examples
 
