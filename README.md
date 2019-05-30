@@ -16,10 +16,10 @@ For explicit documentation of the CLI API, see [here](api.md).
 
 ## How to write plugins
 
-[see `secret-stack/PLUGINS.md` for how to create a plugin](https://github.com/ssbc/secret-stack/blob/master/PLUGINS.md)
+[See `secret-stack/PLUGINS.md` for how to create a plugin](https://github.com/ssbc/secret-stack/blob/master/PLUGINS.md)
 
 
-# examples
+# Examples
 
 ```
 var createSbot = require('secret-stack')()
@@ -31,7 +31,7 @@ createSbot
   .use(require('ssb-plugins'))  //provides install, uninstall, enable, disable. (optional)
 ```
 
-## in-line out of process plugins
+## In-line out of process plugins
 
 Run a plugin as a separate process. The process is
 started by the parent process, and they communicate
@@ -47,7 +47,7 @@ createSbot
   .use(Load(path/to/plugin, 'plugin'))
 ```
 
-## load user configured plugins.
+## Load user configured plugins
 
 add all plugins defined in configuration.
 ``` js
@@ -55,9 +55,8 @@ createSbot
   .use(require('ssb-plugins/load-user-plugins'))
 ```
 
-plugins are configured as following:
-normally this is created by `sbot plugins.install <plugin-name>`
-but it can also be installed manually.
+Plugins are configured as following:
+Normally this is created by `sbot plugins.install <plugin-name>` but it can also be installed manually.
 
 ```
   "plugins": {
@@ -73,7 +72,7 @@ but it can also be installed manually.
   }
 ```
 
-### installing a user configured ssb-plugin manually.
+### Installing a user configured ssb-plugin manually
 
 ```
 cd ~/.ssb
