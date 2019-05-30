@@ -1,8 +1,23 @@
 # ssb-plugins
 
-proof of concept muxrpc plugins as separate process
+`ssb-plugins` is a plugin that provides additional plugin related functionality to a [secret-stack](https://github.com/ssbc/secret-stack) instance.
+
+Without `ssb-plugins`, plugins can only be loaded explicitly by an ssb-server with the `.use()` method.
+
+Generally speaking, this plugin provides the abilility for plugins to be loaded and run as a separate process, with communication over muxrpc.
+
+There are 2 main ways that plugins can be enabled using `ssb-plugins`:
+1. loaded explicitly as part of the creation of a secret-stack instance
+2. loaded as a set of user configured plugins, defined in one's ssb config folder
+
+Additionally, if enabling plugins from user-configuration, making use of `.use(require('ssb-plugins'))` explicitly will enable the CLI commands for users to install / uninstall / enable / disable plugins manually.
+
+For explicit documentation of the CLI API, see [here](api.md).
+
+## How to write plugins
 
 [see `secret-stack/PLUGINS.md` for how to create a plugin](https://github.com/ssbc/secret-stack/blob/master/PLUGINS.md)
+
 
 # examples
 
@@ -11,15 +26,12 @@ var createSbot = require('secret-stack')()
 .use(require('ssb-db'))
 
 createSbot
-//provides install, uninstall, enable, disable. (optional)
-.use(require('ssb-plugins'))
-//load the user plugins. (this can be used without the above)
-.use(require('ssb-plugins/load-user-plugins')()) //load the actual plugins. This may be used without the above!
-//load an out of process plugin directly.
-.use(require('ssb-plugins/load')(path, name))
+  .use(require('ssb-plugins/load-user-plugins')()) //load user plugins from configuration. This may be used without the above!
+  .use(require('ssb-plugins/load')(path, name))  //load an out of process plugin directly.
+  .use(require('ssb-plugins'))  //provides install, uninstall, enable, disable. (optional)
 ```
 
-## out of process plugins
+## in-line out of process plugins
 
 Run a plugin as a separate process. The process is
 started by the parent process, and they communicate
@@ -61,7 +73,7 @@ but it can also be installed manually.
   }
 ```
 
-## installing a ssb-plugin manually.
+### installing a user configured ssb-plugin manually.
 
 ```
 cd ~/.ssb
