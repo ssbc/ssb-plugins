@@ -11,7 +11,6 @@ var mkdirp = require('mkdirp')
 var osenv = require('osenv')
 var rimraf = require('rimraf')
 var mv = require('mv')
-var mdm = require('mdmanifest')
 var explain = require('explain-error')
 var valid = require('muxrpc-validation')({})
 
