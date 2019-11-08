@@ -10,7 +10,6 @@
   "dependencies": {
     "cross-spawn": "^6.0.5",
     "explain-error": "^1.0.4",
-    "mdmanifest": "^1.0.8",
     "mkdirp": "^0.5.1",
     "muxrpc": "^6.4.6",
     "muxrpc-validation": "^3.0.0",
