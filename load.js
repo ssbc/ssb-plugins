@@ -1,5 +1,5 @@
 var path = require('path')
-var MuxrpcApi = require('muxrpc/api')
+var MuxrpcApi = require('muxrpc/remote-api')
 var Run = require('./run')
 module.exports = (location, name) => {
   const manifest = require(path.join(location, 'manifest.json'))
@@ -20,4 +20,3 @@ module.exports = (location, name) => {
     }
   }
 }
-
