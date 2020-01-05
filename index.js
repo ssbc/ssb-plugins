@@ -175,7 +175,6 @@ module.exports = {
                   // - use basename(), because plugins can be installed from the FS, in which case pluginName is a path
                   var name = path.basename(pluginName)
                   config.plugins[name] = {
-                    name: name,
                     subprocess: opts.subprocess
                   }
                   writePluginConfig(config)
@@ -238,4 +237,3 @@ function validatePluginName (name) {
 module.exports.loadUserPlugins = function (createSbot, config) {
   return createSbot.use(require('./load-user-plugins')(config))
 }
-
