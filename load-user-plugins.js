@@ -37,7 +37,8 @@ module.exports = function (config) {
     }
     else if(isObject(name)) {
       subprocess = name.subprocess
-      name = name.name || (/^ssb-/.test(module_name) ? module_name.substring(4) : module_name)
+      var _name = name.name || module_name
+      name = (/^ssb-/.test(_name) ? _name.substring(4) : _name)
     }
 //    if (createSsbServer.plugins.some(plug => plug.name === name))
 //      throw new Error('already loaded plugin named:'+name)
