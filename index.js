@@ -112,7 +112,7 @@ module.exports = {
         var pluginName
         if(isString(opts)) {
           pluginName = opts
-          opts = _opts
+          opts = _opts ? _opts : {} // since muxrpcli will set _opts to undefined if there were no kwargs
           opts.module = pluginName
         }
         else {
@@ -195,7 +195,7 @@ module.exports = {
         var pluginName
         if(isString(opts)) {
           pluginName = opts
-          opts = _opts
+          opts = _opts ? _opts : {}
         }
         else {
           pluginName = opts.name
